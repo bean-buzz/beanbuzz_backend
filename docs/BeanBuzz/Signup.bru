@@ -1,0 +1,21 @@
+meta {
+  name: Signup
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "jason",
+    "lastName": "parkin",
+    "email": "jason@example.com",
+    "phoneNumber": "04000",
+    "password": "kkhhsdf1DD"
+  }
+}
