@@ -51,12 +51,12 @@ app.get("/", (request, response) => {
 });
 
 // Allows the user to sign up to BeanBuzz
-app.post("/signup", async (request, response) => {
+app.post("/register", async (request, response) => {
   // Destructure the data from request.body
   const { firstName, lastName, email, phoneNumber, password } = request.body;
 
   if (!firstName || !lastName || !email || !phoneNumber || !password) {
-    response.status(400).json({
+    return response.status(400).json({
       message: "Incorrect or missing sign-up credentials provided.",
     });
   }
