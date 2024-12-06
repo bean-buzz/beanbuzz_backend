@@ -3,9 +3,9 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const request = require("supertest");
-const { app } = require("../server");
+const { app } = require("../../server");
 
-const { User } = require("../models/UserModel");
+const { User } = require("../../models/UserModel");
 
 jest.mock("bcrypt", () => ({
   hashSync: jest.fn().mockReturnValue("hashedPassword123"), // Mock hashed password return value
@@ -13,7 +13,7 @@ jest.mock("bcrypt", () => ({
 }));
 
 // Mock User methods before the tests run
-jest.mock("../models/UserModel", () => ({
+jest.mock("../../models/UserModel", () => ({
   User: {
     create: jest.fn().mockResolvedValue({
       id: "123",

@@ -1,15 +1,7 @@
-// libraries
 const express = require("express");
-
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 // const nodemailer = require("nodemailer");
-
-// models
-const { User } = require("./models/UserModel");
-
-// local functions
-const { generateJWT } = require("./functions/jwtFunctions");
 
 const app = express();
 
@@ -50,65 +42,9 @@ app.get("/", (request, response) => {
   }
 });
 
-// Allows the user to sign up to BeanBuzz
-app.post("/register", async (request, response) => {
-  // Destructure the data from request.body
-  const { firstName, lastName, email, phoneNumber, password } = request.body;
-
-  if (!firstName || !lastName || !email || !phoneNumber || !password) {
-    return response.status(400).json({
-      message: "Incorrect or missing sign-up credentials provided.",
-    });
-  }
-
-  try {
-    // Check if a user with the same email already exists
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return response.status(403).json({
-        message: "Email already exists.",
-      });
-    }
-
-    // Create the new user in the DB
-    const newUser = await User.create({
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      password,
-    });
-
-    // Generate a JWT based on the user's ID and email
-    const newJwt = generateJWT(newUser.id, newUser.email);
-
-    // Return the JWT and user data (excluding sensitive info like password)
-    return response.json({
-      jwt: newJwt,
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-      },
-    });
-  } catch (err) {
-    // If it's a validation error (password validation fails), catch it here
-    if (err.name === "ValidationError") {
-      const validationErrors = Object.values(err.errors).map(
-        (error) => error.message
-      );
-      return response
-        .status(400)
-        .json({ message: validationErrors.join(", ") });
-    }
-
-    // For other errors, send a generic 500 response
-    console.error(err);
-    return response.status(500).json({
-      message: "Internal server error.",
-    });
-  }
-});
+// Controllers
+const userController = require("./controllers/UserController");
+app.use("", userController);
 
 module.exports = {
   app,
