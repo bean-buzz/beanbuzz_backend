@@ -2,8 +2,8 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const request = require("supertest"); // Import supertest for making HTTP requests
-const { app } = require("../server"); // Import app from src/server.js
+const request = require("supertest");
+const { app } = require("../server");
 
 const { User } = require("../models/UserModel");
 
@@ -84,12 +84,6 @@ describe("POST /register", () => {
       phoneNumber: "1234567890",
       password: "Password123",
     });
-
-    // // Create the user instance
-    // const user = new User(userData);
-
-    // // Save the user to trigger the pre-save hook (inside UserModel)
-    // await user.save();
 
     // Verify that the password is hashed
     expect(user.password).not.toBe("Password123");
