@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 
 const { User } = require("../models/UserModel");
 const { generateJWT } = require("../functions/jwtFunctions");
+const { validateUserAuth } = require("../middleware/validateUserAuth");
 
 const router = express.Router();
 
@@ -59,7 +60,6 @@ router.post("/register", async (request, response) => {
     }
 
     // For other errors, send a generic 500 response
-    console.error(err);
     return response.status(500).json({
       message: "Internal server error.",
     });
@@ -113,6 +113,12 @@ router.post("/login", async (request, response) => {
       message: "Internal server error.",
     });
   }
+});
+
+router.get("/protectedRoute", validateUserAuth, (request, response) => {
+  response.json({
+    message: "You can see protected content because you're signed in!",
+  });
 });
 
 module.exports = router;
