@@ -1,5 +1,9 @@
+require("dotenv").config();
+
 const express = require("express");
 const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 
 const { User } = require("../models/UserModel");
 const { generateJWT } = require("../functions/jwtFunctions");
@@ -40,7 +44,7 @@ router.post("/register", async (request, response) => {
     // Generate a JWT based on the user's ID and email
     const newJwt = generateJWT(newUser.id, newUser.email);
 
-    // Return the JWT and user data (excluding sensitive info like password)
+    // Return the JWT and user data
     return response.json({
       jwt: newJwt,
       user: {
@@ -49,7 +53,7 @@ router.post("/register", async (request, response) => {
       },
     });
   } catch (err) {
-    // If it's a validation error (password validation fails), catch it here
+    // If it's a validation error (password validation fails)
     if (err.name === "ValidationError") {
       const validationErrors = Object.values(err.errors).map(
         (error) => error.message
@@ -108,7 +112,6 @@ router.post("/login", async (request, response) => {
       },
     });
   } catch (err) {
-    // Send a generic 500 response
     return response.status(500).json({
       message: "Internal server error.",
     });
@@ -119,6 +122,96 @@ router.get("/protectedRoute", validateUserAuth, (request, response) => {
   response.json({
     message: "You can see protected content because you're signed in!",
   });
+});
+
+/*
+  Allow the user to verify a forgot password reset.
+  This is send a valid jwt token to the user that expires within the hour
+  This will send the user to a password reset page
+*/
+// Configure the transporter for sending email
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
+// Endpoint to request password reset
+router.post("/request-password-reset", async (request, response) => {
+  const { email } = request.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return response.status(404).json({ message: "User not found" });
+    }
+
+    // Generate a one-time reset token - valid for 1 hour
+    const resetToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    // Send the reset link via email
+    const resetLink = `${process.env.WEBSITE_URL}/reset-password/${resetToken}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset Request",
+      text: `To reset your password, click the following link: ${resetLink}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    response.status(200).json({ message: "Reset link sent to email" });
+  } catch (error) {
+    response.status(400).json({ message: "An error occurred" });
+  }
+});
+
+router.post("/reset-password", async (request, response) => {
+  const { token, password } = request.body;
+
+  if (!password) {
+    return response.status(400).json({ message: "Password is required" });
+  }
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    // Find the user associated with the token
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return response.status(404).json({ message: "User not found" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update the user's password in the database
+    user.password = hashedPassword;
+    await user.save();
+
+    response.status(200).json({ message: "Password reset successful" });
+  } catch (error) {
+    // Handle JWT related errors
+    if (
+      error.name === "TokenExpiredError" ||
+      error.name === "JsonWebTokenError" ||
+      error.message === "Invalid or expired token"
+    ) {
+      return response.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    // Handle other unexpected errors
+    return response.status(500).json({ message: "An error occurred" });
+  }
 });
 
 module.exports = router;
