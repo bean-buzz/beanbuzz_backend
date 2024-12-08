@@ -4,6 +4,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 
 const { User } = require("../models/UserModel");
 const { generateJWT } = require("../functions/jwtFunctions");
@@ -118,6 +120,7 @@ router.post("/login", async (request, response) => {
   }
 });
 
+// This route is looked after inside the front-end
 router.get("/protectedRoute", validateUserAuth, (request, response) => {
   response.json({
     message: "You can see protected content because you're signed in!",
@@ -159,11 +162,29 @@ router.post("/request-password-reset", async (request, response) => {
 
     // Send the reset link via email
     const resetLink = `${process.env.WEBSITE_URL}/reset-password/${resetToken}`;
+
+    // Read the HTML template
+    const templatePath = path.join(
+      __dirname,
+      "../../email_templates/user_emails/resetPasswordTemplate.html"
+    );
+    let templateSource = fs.readFileSync(templatePath, "utf8");
+
+    templateSource = templateSource.replace("{{resetLink}}", resetLink);
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Password Reset Request",
-      text: `To reset your password, click the following link: ${resetLink}`,
+      html: templateSource,
+      attachments: [
+        {
+          filename: "Logo.png",
+          path: path.join(__dirname, "../../email_templates/assets/Logo.png"),
+          // This matches the `cid` reference in the HTML
+          cid: "logoImage",
+        },
+      ],
     };
 
     await transporter.sendMail(mailOptions);
