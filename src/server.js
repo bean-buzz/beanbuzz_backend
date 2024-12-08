@@ -10,6 +10,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "http://localhost:8080",
       "http://localhost:5173",
       // Replace with the URL of the frontend + backend in development
       //      https://render URL

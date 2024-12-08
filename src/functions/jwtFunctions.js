@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-// async function generateJWT(userDetailsObj)
+// Generate a JWT for the user
 function generateJWT(userId, email, role = "user") {
   return jwt.sign(
     {
@@ -17,6 +17,11 @@ function generateJWT(userId, email, role = "user") {
   );
 }
 
+function decodeJWT(tokenToDecode) {
+  return jwt.verify(tokenToDecode, jwtSecretKey);
+}
+
 module.exports = {
   generateJWT,
+  decodeJWT,
 };
