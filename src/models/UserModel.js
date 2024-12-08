@@ -47,8 +47,7 @@ const UserSchema = new mongoose.Schema(
           return /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(v);
         },
         message:
-          "Password must be at least 8 characters " +
-          "long and contain at least one uppercase letter and one number.",
+          "Password must be at least 8 characters long and contain at least one uppercase letter and one number.",
       },
     },
     role: {
@@ -68,10 +67,9 @@ const UserSchema = new mongoose.Schema(
 // Hash the password before saving
 UserSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    try {
+    // Don't hash an already hashed password
+    if (!this.password.startsWith("$2b$")) {
       this.password = await bcrypt.hash(this.password, 10);
-    } catch (error) {
-      return next(error);
     }
   }
   next();

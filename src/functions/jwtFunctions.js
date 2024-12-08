@@ -12,7 +12,7 @@ function generateJWT(userId, email, role = "user") {
     },
     jwtSecretKey,
     {
-      expiresIn: "7d",
+      expiresIn: "1d",
     }
   );
 }

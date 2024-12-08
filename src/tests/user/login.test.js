@@ -7,7 +7,7 @@ const { app } = require("../../server");
 
 const { User } = require("../../models/UserModel");
 
-// Creat a bcrypt mock
+// Create a bcrypt mock
 jest.mock("bcrypt", () => ({
   hashSync: jest.fn().mockReturnValue("hashedPassword123"),
   hash: jest.fn().mockResolvedValue("hashedPassword123"),
