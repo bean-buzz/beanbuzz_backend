@@ -38,11 +38,11 @@ router.post("/register", async (request, response) => {
     });
 
     // Generate a JWT based on the user's ID and email
-    const newJwt = generateJWT(newUser.id, newUser.email);
+    const token = generateJWT(newUser.id, newUser.email);
 
     // Return the JWT and user data (excluding sensitive info like password)
     return response.json({
-      jwt: newJwt,
+      jwt: token,
       user: {
         id: newUser.id,
         email: newUser.email,
