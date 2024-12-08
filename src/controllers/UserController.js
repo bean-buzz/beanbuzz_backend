@@ -120,6 +120,7 @@ router.post("/login", async (request, response) => {
   }
 });
 
+// This route is looked after inside the front-end
 router.get("/protectedRoute", validateUserAuth, (request, response) => {
   response.json({
     message: "You can see protected content because you're signed in!",
