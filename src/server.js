@@ -43,8 +43,13 @@ app.get("/", (request, response) => {
 });
 
 // Controllers
+// User
 const userController = require("./controllers/UserController");
 app.use("", userController);
+
+// Menu Item
+const MenuItemController = require("./controllers/MenuItemController");
+app.use("/menu", MenuItemController);
 
 module.exports = {
   app,
