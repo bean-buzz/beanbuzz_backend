@@ -1,0 +1,19 @@
+meta {
+  name: Delete Menu Item
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:8080/menu/item/:itemId
+  body: none
+  auth: none
+}
+
+params:path {
+  itemId: 6756dd8be0a78bd5cd912a2c
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzU1OGU1OThiNTMyMTZkMzVlMWYwMWMiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzMzNzQ1MTQ4LCJleHAiOjE3MzM4MzE1NDh9.tR9Q-BEae4nizO_IzjaQXg4TvnRoM8PS8OfTkOO2uj8
+}

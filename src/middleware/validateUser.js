@@ -32,4 +32,18 @@ async function validateUserAuth(request, response, next) {
   }
 }
 
-module.exports = { validateUserAuth };
+// Validate whether the user's role is admin
+const isAdmin = (request, response, next) => {
+    try {
+    if (!request.authUserData || request.authUserData.role !== "admin") {
+      return response.status(403).json({
+        message: "Access denied. This is for Admins only.",
+      });
+    }
+    next();
+  } catch (error) {
+    response.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { validateUserAuth, isAdmin };

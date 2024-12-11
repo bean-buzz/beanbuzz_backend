@@ -9,10 +9,11 @@ const path = require("path");
 
 const { User } = require("../models/UserModel");
 const { generateJWT } = require("../functions/jwtFunctions");
-const { validateUserAuth } = require("../middleware/validateUserAuth");
+const { validateUserAuth} = require("../middleware/validateUser");
 
 const router = express.Router();
 
+// POST - /register
 // Allows the user to sign up to BeanBuzz
 router.post("/register", async (request, response) => {
   // Destructure the data from request.body
@@ -72,6 +73,7 @@ router.post("/register", async (request, response) => {
   }
 });
 
+// POST - /login
 // Allows the user to login into BeanBuzz
 router.post("/login", async (request, response) => {
   const { email, password } = request.body;
@@ -120,6 +122,7 @@ router.post("/login", async (request, response) => {
   }
 });
 
+// GET - /protectedRoute
 // This route is looked after inside the front-end
 router.get("/protectedRoute", validateUserAuth, (request, response) => {
   response.json({
@@ -141,6 +144,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// POST - /request-password-reset
 // Endpoint to request password reset
 router.post("/request-password-reset", async (request, response) => {
   const { email } = request.body;
@@ -195,6 +199,7 @@ router.post("/request-password-reset", async (request, response) => {
   }
 });
 
+// POST - /reset-password
 router.post("/reset-password", async (request, response) => {
   const { token, password } = request.body;
 

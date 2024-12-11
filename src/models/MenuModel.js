@@ -36,7 +36,7 @@ const MenuItemSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const MenuItem = mongoose.model("menuitem", MenuItemSchema);
+const MenuItem = mongoose.model("MenuItem", MenuItemSchema);
 
 module.exports = {
   MenuItem,
