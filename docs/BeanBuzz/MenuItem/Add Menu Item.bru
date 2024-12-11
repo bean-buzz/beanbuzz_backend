@@ -1,0 +1,49 @@
+meta {
+  name: Add Menu Item
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/menu/item
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzU1OGU1OThiNTMyMTZkMzVlMWYwMWMiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzMzOTA0NzU4LCJleHAiOjE3MzM5OTExNTh9.f7UF8fzMsvD9STdhwLJIMXX1yqjVox7LVHKHel-SN7Y
+}
+
+body:json {
+  {
+        "itemName": "Cappuccino",
+        "category": "coffee",
+        "imageUrl": "./menu-item-images/cappuccino_resized.jpg",
+        "description": "A creamy and delicious beverage made from the finest italian coffee beans and full cream milk.",
+        "isAvailable": true,
+        "multipleSizes": true,
+        "defaultPrice": null,
+        "sizes": {
+          "small": {
+            "price": 4.5
+          },
+          "medium": {
+            "price": 5.5
+          },
+          "large": {
+            "price": 6.5
+          }
+        },
+        "dietaryInformation": {
+          "isVegan": false,
+          "isVegetarian": true,
+          "isGlutenFree": true,
+          "isDairyFree": false,
+          "isHalal": true,
+          "isKosher": true,
+          "isBeefFree": true
+        },
+        "creationDate": "2024-05-18T14:10:30.000Z",
+        "lastUpdateDate": "2024-05-18T14:10:30.000Z"
+  }
+}
