@@ -1,7 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 
+const expressAsyncErrors = require("express-async-errors");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+
 const app = express();
+
+const reviewRouter = require("./routes/reviewRouter.js");
+const errorHandlerMiddleware = require("./middleware/errorHandlerMiddleware.js");
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // Allow CORS from Vite's frontend
 app.use(
@@ -22,6 +35,8 @@ app.use(
 );
 
 app.use(express.json());
+app.use(helmet());
+app.use(mongoSanitize());
 
 // This will allow us to check whether the server is running as expected
 app.get("/", (request, response) => {
@@ -50,6 +65,15 @@ app.use("", userController);
 // Menu Item
 const MenuItemController = require("./controllers/MenuItemController");
 app.use("/menu", MenuItemController);
+
+// User Reviews
+app.use("/reviews", reviewRouter);
+
+app.use("*", (req, res) => {
+  res.status(404).json({ msg: "not found" });
+});
+
+app.use(errorHandlerMiddleware);
 
 module.exports = {
   app,
