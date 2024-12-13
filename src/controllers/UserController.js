@@ -8,8 +8,9 @@ const fs = require("fs");
 const path = require("path");
 
 const { User } = require("../models/UserModel");
+
 const { generateJWT } = require("../functions/jwtFunctions");
-const { validateUserAuth} = require("../middleware/validateUser");
+const { validateUserAuth } = require("../middleware/validateUser");
 
 const router = express.Router();
 
@@ -45,7 +46,12 @@ router.post("/register", async (request, response) => {
     });
 
     // Generate a JWT based on the user's ID and email
-    const token = generateJWT(newUser.id, newUser.email);
+    const token = generateJWT(
+      newUser.id,
+      newUser.email,
+      newUser.role,
+      newUser.firstName
+    );
 
     // Return the JWT and user data
     return response.json({
@@ -104,7 +110,7 @@ router.post("/login", async (request, response) => {
     }
 
     // Generate JWT token
-    const token = generateJWT(user.id, user.email, user.role);
+    const token = generateJWT(user.id, user.email, user.role, user.firstName);
 
     // Return JWT and user data
     response.json({
@@ -113,6 +119,7 @@ router.post("/login", async (request, response) => {
       user: {
         id: user.id,
         email: user.email,
+        name: user.firstName,
       },
     });
   } catch (err) {

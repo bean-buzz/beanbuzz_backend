@@ -51,6 +51,10 @@ app.use("", userController);
 const MenuItemController = require("./controllers/MenuItemController");
 app.use("/menu", MenuItemController);
 
+// Order
+const OrderController = require("./controllers/OrderController");
+app.use("/order", OrderController);
+
 module.exports = {
   app,
 };

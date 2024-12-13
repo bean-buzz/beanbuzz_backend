@@ -1,0 +1,31 @@
+meta {
+  name: Create an Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8081/order
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "tableNumber": "T002",
+    "customerName": "Jane Smith",
+    "items": [
+      {
+        "menuItem": "675bfbf149d385b570d1032a",
+        "size": "medium",
+        "quantity": 2
+      },
+      {
+        "menuItem": "675bfbf149d385b570d10314",
+        "quantity": 2,
+        "size": "large",
+        "specialInstructions": "No sugar"
+      }
+    ]
+  }
+}
