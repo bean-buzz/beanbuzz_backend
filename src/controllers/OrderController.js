@@ -4,7 +4,10 @@ const crypto = require("crypto");
 const { MenuItem } = require("../models/MenuModel");
 const { Order } = require("../models/OrderModel");
 
-const { isStaff } = require("../middleware/validateUser");
+const {
+  validateUserAuth,
+  roleValidator,
+} = require("../middleware/validateUser");
 
 const router = express.Router();
 
@@ -94,7 +97,7 @@ router.post("/", async (req, res) => {
     This endpoint can use a bunch params
     If no params are used, this will display all orders
 */
-router.get("/", isStaff, async (req, res) => {
+router.get("/", validateUserAuth, roleValidator("staff"), async (req, res) => {
   try {
     const {
       orderStatus,
@@ -147,5 +150,142 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// PUT - /order/:id
+// Allow staff & admin to update an order by Id
+router.put(
+  "/:id",
+  validateUserAuth,
+  roleValidator("staff"),
+  async (req, res) => {
+    try {
+      const {
+        orderStatus,
+        paymentStatus,
+        paymentMethod,
+        specialInstructions,
+        items,
+      } = req.body;
+
+      const { id } = req.params;
+
+      // Validate that the order exists
+      const order = await Order.findById(id);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found." });
+      }
+
+      // Update order fields
+      if (orderStatus) {
+        order.orderStatus = orderStatus;
+      }
+
+      if (paymentStatus) {
+        order.paymentStatus = paymentStatus;
+      }
+
+      if (paymentMethod) {
+        order.paymentMethod = paymentMethod;
+      }
+
+      if (specialInstructions) {
+        order.specialInstructions = specialInstructions;
+      }
+
+      if (items && items.length > 0) {
+        order.items = items;
+
+        // Recalculate total price for updated items
+        let totalPrice = 0;
+        for (const item of items) {
+          const menuItem = await MenuItem.findById(item.menuItem);
+
+          if (menuItem) {
+            if (menuItem.multipleSizes) {
+              if (!menuItem.sizes[item.size]) {
+                return res.status(400).json({
+                  message: `Invalid size ${item.size} for menu item ${menuItem.itemName}.`,
+                });
+              }
+
+              item.price = menuItem.sizes[item.size].price * item.quantity;
+            } else {
+              item.price = menuItem.defaultPrice * item.quantity;
+            }
+
+            totalPrice += item.price;
+          }
+        }
+        order.totalPrice = totalPrice;
+      }
+
+      // Save updated order
+      const updatedOrder = await order.save();
+      res.status(200).json(updatedOrder);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// POST - /order/:id/submit
+// Allow staff/admin to submit an order - mark as completed and paid
+router.post(
+  "/:id/submit",
+  validateUserAuth,
+  roleValidator("staff"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Validate that the order exists
+      const order = await Order.findById(id);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found." });
+      }
+
+      // Check if the order is already completed
+      if (order.orderStatus === "Completed") {
+        return res.status(400).json({ message: "Order is already completed." });
+      }
+
+      // Update order status to completed and payment status to paid
+      order.orderStatus = "Completed";
+      order.paymentStatus = "Paid";
+
+      // Save the updated order
+      const updatedOrder = await order.save();
+      res.status(200).json(updatedOrder);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// DELETE - /order/:id
+// Allow staff & admin to delete an order by ID
+router.delete(
+  "/:id",
+  validateUserAuth,
+  roleValidator("staff"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      // Validate that the order exists
+      const order = await Order.findById(id);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found." });
+      }
+
+      // Delete the order
+      await Order.findByIdAndDelete(id);
+
+      res.status(200).json({ message: "Order deleted successfully." });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
 module.exports = router;

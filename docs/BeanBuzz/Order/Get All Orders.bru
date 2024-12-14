@@ -5,15 +5,15 @@ meta {
 }
 
 get {
-  url: http://localhost:8081/order?tableNumber=T001
+  url: http://localhost:8080/order?orderStatus=Pending
   body: none
   auth: none
 }
 
 params:query {
-  tableNumber: T001
+  orderStatus: Pending
 }
 
 headers {
-  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzVhYjY5ZjdkZjBkYTAyOTRkNjhjODYiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MDg0NDAwLCJleHAiOjE3MzQxNzA4MDB9.NRnvQwVQI2JAKVUIFMJEuwpaPo6KvThy3IYv9e6SJ9g
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzVjMTEzZWI5MWFlYzg0YWQwYjZkMmIiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6InN0YWZmIiwiaWF0IjoxNzM0MTcxNzgzLCJleHAiOjE3MzQyNTgxODN9.pT0iR_ob05w9HVAeWZL872vd2QR6oX9aS8XDieLRzNk
 }
