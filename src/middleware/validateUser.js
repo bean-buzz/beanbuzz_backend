@@ -32,18 +32,48 @@ async function validateUserAuth(request, response, next) {
   }
 }
 
-// Validate whether the user's role is admin
-const isAdmin = (request, response, next) => {
+// Validate user roles and their hierarchy
+// This will allow access to all roles higher than the requiredRole
+const roleValidator = (requiredRole) => {
+  // Define the role hierarchy
+  const roleHierarchy = {
+    user: 1,
+    staff: 2,
+    admin: 3,
+  };
+
+  return (request, response, next) => {
     try {
-    if (!request.authUserData || request.authUserData.role !== "admin") {
-      return response.status(403).json({
-        message: "Access denied. This is for Admins only.",
-      });
+      // Check if the user is authenticated and has a role
+      if (!request.authUserData || !request.authUserData.role) {
+        console.log("User jwt role: " + request.authUserData);
+        return response.status(403).json({
+          message: "Access denied. No role assigned.",
+        });
+      }
+
+      const userRole = request.authUserData.role;
+
+      // Make sure the user's role is valid in the hierarchy
+      if (!roleHierarchy[userRole]) {
+        return response.status(403).json({
+          message: "Access denied. Invalid role.",
+        });
+      }
+
+      // Compare the user's role with the required role
+      if (roleHierarchy[userRole] < roleHierarchy[requiredRole]) {
+        return response.status(403).json({
+          message: `Access denied. This action requires ${requiredRole} or higher.`,
+        });
+      }
+
+      // User's role meets or exceeds the required role
+      next();
+    } catch (error) {
+      response.status(500).json({ error: error.message });
     }
-    next();
-  } catch (error) {
-    response.status(500).json({ error: error.message });
-  }
+  };
 };
 
-module.exports = { validateUserAuth, isAdmin };
+module.exports = { validateUserAuth, roleValidator };

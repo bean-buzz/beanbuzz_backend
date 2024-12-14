@@ -1,7 +1,10 @@
 const express = require("express");
 
 const { MenuItem } = require("../models/MenuModel");
-const { validateUserAuth, isAdmin } = require("../middleware/validateUser");
+const {
+  validateUserAuth,
+  roleValidator,
+} = require("../middleware/validateUser");
 
 const router = express.Router();
 
@@ -59,7 +62,7 @@ router.get("/item/:itemId", async (request, response) => {
 
 // POST - /menu/item
 // Add a new menu item (Admin only)
-router.post("/item", validateUserAuth, isAdmin, async (request, response) => {
+router.post("/item", validateUserAuth, roleValidator("admin"), async (request, response) => {
   try {
     const newItem = new MenuItem(request.body);
     const savedItem = await newItem.save();
@@ -75,7 +78,7 @@ router.post("/item", validateUserAuth, isAdmin, async (request, response) => {
 router.put(
   "/item/:itemId",
   validateUserAuth,
-  isAdmin,
+  roleValidator("admin"),
   async (request, response) => {
     try {
       const { itemId } = request.params;
@@ -103,7 +106,7 @@ router.put(
 router.delete(
   "/item/:itemId",
   validateUserAuth,
-  isAdmin,
+  roleValidator("admin"),
   async (request, response) => {
     try {
       const { itemId } = request.params;

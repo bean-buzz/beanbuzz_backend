@@ -1,0 +1,26 @@
+meta {
+  name: Update an Order by Id
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/order/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 675c035ff8b0eab4780a453c
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzVjMTEzZWI5MWFlYzg0YWQwYjZkMmIiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6InN0YWZmIiwiaWF0IjoxNzM0MTc1MDE1LCJleHAiOjE3MzQyNjE0MTV9.RpK8ERSdnC7W_Uj5f7pcvO8a8EnWs81zN986X136Gw0
+}
+
+body:json {
+  {
+    "orderStatus": "In Progress",
+    "paymentStatus": "Paid"
+  }
+}
