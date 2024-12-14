@@ -9,9 +9,6 @@ const mongoSanitize = require("express-mongo-sanitize");
 
 const app = express();
 
-const reviewRouter = require("./routes/reviewRouter.js");
-const errorHandlerMiddleware = require("./middleware/errorHandlerMiddleware.js");
-
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -66,14 +63,22 @@ app.use("", userController);
 const MenuItemController = require("./controllers/MenuItemController");
 app.use("/menu", MenuItemController);
 
+// Order
+const OrderController = require("./controllers/OrderController");
+app.use("/order", OrderController);
+
 // User Reviews
+const reviewRouter = require("./routes/reviewRouter.js");
 app.use("/reviews", reviewRouter);
+
 
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "not found" });
 });
 
+const errorHandlerMiddleware = require("./middleware/errorHandlerMiddleware.js");
 app.use(errorHandlerMiddleware);
+
 
 module.exports = {
   app,

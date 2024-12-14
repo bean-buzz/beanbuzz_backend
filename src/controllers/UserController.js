@@ -8,8 +8,9 @@ const fs = require("fs");
 const path = require("path");
 
 const { User } = require("../models/UserModel");
+
 const { generateJWT } = require("../functions/jwtFunctions");
-const { validateUserAuth} = require("../middleware/validateUser");
+const { validateUserAuth } = require("../middleware/validateUser");
 
 const router = express.Router();
 

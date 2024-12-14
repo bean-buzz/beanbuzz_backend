@@ -1,0 +1,19 @@
+meta {
+  name: Get All Orders
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8081/order?tableNumber=T001
+  body: none
+  auth: none
+}
+
+params:query {
+  tableNumber: T001
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzVhYjY5ZjdkZjBkYTAyOTRkNjhjODYiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MDg0NDAwLCJleHAiOjE3MzQxNzA4MDB9.NRnvQwVQI2JAKVUIFMJEuwpaPo6KvThy3IYv9e6SJ9g
+}
