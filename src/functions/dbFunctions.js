@@ -24,6 +24,16 @@ async function dbConnect() {
   }
 }
 
+async function dbClose() {
+  try{
+    await mongoose.connection.close();
+    console.log("Closing database now")
+  } catch (error) {
+    console.log(`dbClose failed! error: \n ${JSON.stringify(error)}`)
+  }
+}
+
 module.exports = {
   dbConnect,
+  dbClose
 };
