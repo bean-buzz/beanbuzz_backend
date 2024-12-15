@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
+    "seed-menu": "node src/utils/seeding/seedMenu.js",
+    "delete-menu": "node src/utils/seeding/deleteMenu.js",
     "test": "jest"
   },
   "keywords": [],
