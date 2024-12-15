@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
 const { MenuItem } = require("../../models/MenuModel.js");
 const { dbConnect, dbClose } = require("../../functions/dbFunctions.js");
 
+// Async function that deletes all documents in the menuitems collection
 async function deleteMenu() {
   try {
     await dbConnect();

@@ -1,12 +1,14 @@
-const mongoose = require("mongoose");
 const {dbConnect, dbClose } = require("../../functions/dbFunctions.js");
 const { MenuItem } = require("../../models/MenuModel.js");
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
 
+// Defines the path to the JSON file containing sample data
 const jsonFilePath = path.join(__dirname, "sampleData.json");
 
+
+// Asynchronous function to read and parse menu item data from the JSON file
 async function retrieveMenuItemData() {
   try {
     const data = await fs.readFileSync(jsonFilePath, "utf-8");
@@ -21,6 +23,7 @@ async function retrieveMenuItemData() {
   }
 }
 
+// Asynchronous function to seed menu item data into the MongoDB database
 async function seedMenuData() {
   const sampleMenuItemData = await retrieveMenuItemData();
   try {
