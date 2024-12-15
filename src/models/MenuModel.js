@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // Allow different sizes for menu items
 const SizeSchema = new mongoose.Schema({
-  price: { type: Number, required: true },
+  price: { type: Number, required: false },
 });
 
 // Allow dietary info to be separate for easier accessibility

@@ -16,10 +16,24 @@ async function dbConnect() {
   let databaseURL =
     process.env.DATABASE_URL ||
     `mongodb://127.0.0.1:27017/${process.env.npm_package_name}`;
+  try {
   await mongoose.connect(databaseURL);
   console.log("Connected to database at " + databaseURL);
+  } catch (error) {
+    console.log(`dbConnect failed! error: \n ${JSON.stringify(error)}`)
+  }
+}
+
+async function dbClose() {
+  try{
+    await mongoose.connection.close();
+    console.log("Closing database now")
+  } catch (error) {
+    console.log(`dbClose failed! error: \n ${JSON.stringify(error)}`)
+  }
 }
 
 module.exports = {
   dbConnect,
+  dbClose
 };
