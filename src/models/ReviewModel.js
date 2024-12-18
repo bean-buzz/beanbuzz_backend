@@ -18,7 +18,7 @@ const ReviewSchema = new mongoose.Schema(
     reviewStatus: {
       type: String,
       enum: Object.values(REVIEW_STATUS),
-      default: REVIEW_STATUS.APPROVED,
+      default: REVIEW_STATUS.DECLINED,
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
