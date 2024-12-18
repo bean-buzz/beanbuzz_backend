@@ -1,6 +1,7 @@
 const REVIEW_STATUS = {
   APPROVED: "approved",
   DECLINED: "declined",
+  EMPTY: "",
 };
 
 module.exports = {
