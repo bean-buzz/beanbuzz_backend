@@ -1,0 +1,19 @@
+meta {
+  name: Delete an Order by Id
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:8080/order/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 675fb98cf25c3538f17a0621
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzVjMTEzZWI5MWFlYzg0YWQwYjZkMmIiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MzI2NzMzLCJleHAiOjE3MzQ0MTMxMzN9.ctXVYJytlMVwAMZOfeoHKSPqrNVKD3KVP1d_wyuy3no
+}

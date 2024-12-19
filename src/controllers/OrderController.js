@@ -37,8 +37,9 @@ router.post("/", async (req, res) => {
         .json({ message: "Customer name and items are required." });
     }
 
-    // Calculate the total price and validate items
+    // Calculate the total price, quantity and validate items
     let totalPrice = 0;
+    let totalQuantity = 0;
     // Loop items inside the order array
     for (const item of items) {
       // Find the current item
@@ -59,12 +60,14 @@ router.post("/", async (req, res) => {
         }
         // Calculate price for size
         item.price = menuItem.sizes[item.size].price * item.quantity;
+        // Add quntities to the total
       } else {
         // Use default price
         item.price = menuItem.defaultPrice * item.quantity;
       }
 
       totalPrice += item.price;
+      totalQuantity += item.quantity;
     }
 
     // Generate cashTransferCode if payment method is Cash
@@ -78,6 +81,7 @@ router.post("/", async (req, res) => {
       tableNumber,
       customerName,
       items,
+      totalQuantity,
       totalPrice,
       specialInstructions,
       paymentMethod,
@@ -139,17 +143,25 @@ router.get("/", validateUserAuth, roleValidator("staff"), async (req, res) => {
 
 // GET - /order/:id
 // Allow the user or staff to retrieve order by id
-router.get("/:id", async (req, res) => {
-  try {
-    const order = await Order.findById(req.params.id);
-    if (!order) {
-      return res.status(404).json({ message: "Order not found." });
+router.get(
+  "/:id",
+  validateUserAuth,
+  roleValidator("staff"),
+  async (req, res) => {
+    try {
+      const order = await Order.findById(req.params.id)
+        .populate("items.menuItem")
+        .exec();
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found." });
+      }
+      res.status(200).json(order);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-    res.status(200).json(order);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
-});
+);
 
 // PUT - /order/:id
 // Allow staff & admin to update an order by Id
@@ -159,15 +171,17 @@ router.put(
   roleValidator("staff"),
   async (req, res) => {
     try {
+      const { id } = req.params;
+
       const {
         orderStatus,
         paymentStatus,
         paymentMethod,
         specialInstructions,
         items,
+        totalPrice,
+        totalQuantity,
       } = req.body;
-
-      const { id } = req.params;
 
       // Validate that the order exists
       const order = await Order.findById(id);
@@ -188,15 +202,30 @@ router.put(
         order.paymentMethod = paymentMethod;
       }
 
-      if (specialInstructions) {
-        order.specialInstructions = specialInstructions;
+      if (specialInstructions !== undefined) {
+        order.specialInstructions = specialInstructions || "";
+      }
+
+      if (totalPrice) {
+        order.totalPrice = totalPrice;
+      }
+
+      if (totalQuantity) {
+        order.totalQuantity = totalQuantity;
       }
 
       if (items && items.length > 0) {
-        order.items = items;
+        order.items = items.map((item) => {
+          if (item.specialInstructions === undefined) {
+            item.specialInstructions = "";
+          }
+          return item;
+        });
 
         // Recalculate total price for updated items
         let totalPrice = 0;
+        let totalQuantity = 0;
+
         for (const item of items) {
           const menuItem = await MenuItem.findById(item.menuItem);
 
@@ -214,11 +243,14 @@ router.put(
             }
 
             totalPrice += item.price;
+            totalQuantity += item.quantity;
           }
         }
         order.totalPrice = totalPrice;
+        order.totalQuantity = totalQuantity;
       }
 
+      console.log(`TOTALQUANTITY ${order.totalQuantity}`);
       // Save updated order
       const updatedOrder = await order.save();
       res.status(200).json(updatedOrder);
