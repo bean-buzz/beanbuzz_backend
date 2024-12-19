@@ -1,0 +1,30 @@
+meta {
+  name: Update Menu Item by Id
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8080/menu/item/:itemId
+  body: json
+  auth: none
+}
+
+params:path {
+  itemId: 675ec3095767b86a8d7035fb
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzVjMTEzZWI5MWFlYzg0YWQwYjZkMmIiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzM0MzE2OTk0LCJleHAiOjE3MzQ0MDMzOTR9.DtQkkA6aEN0jkCveqHFniHY1uFrjN1OcMB2kHIHybWE
+}
+
+body:json {
+  {
+    "sizes": {
+      "small": { "price": 8.99 },
+      "medium": { "price": 10.99 },
+      "large": { "price": 12.99 }
+    }
+  }
+  
+}

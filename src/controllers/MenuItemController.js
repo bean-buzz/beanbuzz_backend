@@ -62,16 +62,21 @@ router.get("/item/:itemId", async (request, response) => {
 
 // POST - /menu/item
 // Add a new menu item (Admin only)
-router.post("/item", validateUserAuth, roleValidator("admin"), async (request, response) => {
-  try {
-    const newItem = new MenuItem(request.body);
-    const savedItem = await newItem.save();
-    response.status(201).json(savedItem);
-  } catch (error) {
-    // Handle errors and send a 500 response
-    response.status(500).json({ error: error.message });
+router.post(
+  "/item",
+  validateUserAuth,
+  roleValidator("admin"),
+  async (request, response) => {
+    try {
+      const newItem = new MenuItem(request.body);
+      const savedItem = await newItem.save();
+      response.status(201).json(savedItem);
+    } catch (error) {
+      // Handle errors and send a 500 response
+      response.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 // PUT - /menu/item/:itemId
 // Update a specific menu item (Admin only)
@@ -82,21 +87,34 @@ router.put(
   async (request, response) => {
     try {
       const { itemId } = request.params;
+
+      // Find and update the menu item by ID
       const updatedItem = await MenuItem.findByIdAndUpdate(
         itemId,
         request.body,
         {
+          // Return the updated document
           new: true,
+          // Make sure schema validators are applied
           runValidators: true,
         }
       );
+
+      // If the menu item is not found
       if (!updatedItem) {
         return response.status(404).json({ message: "Menu item not found." });
       }
+
+      // Return the updated menu item
       response.status(200).json(updatedItem);
     } catch (error) {
-      // Handle errors and send a 500 response
-      response.status(500).json({ error: error.message });
+      // Handle any errors during the update
+      response.status(500).json({
+        message: "Failed to update the menu item.",
+
+        // TODO: Remove error message in production
+        error: error.message,
+      });
     }
   }
 );
