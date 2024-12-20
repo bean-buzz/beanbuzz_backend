@@ -63,7 +63,3 @@ async function seedReviewData() {
   
   seedReviewData();
 
-
-  module.exports={
-    seedReviewData,
-  }

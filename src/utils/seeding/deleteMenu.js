@@ -18,7 +18,3 @@ async function deleteMenu() {
 
 deleteMenu();
 
-
-module.exports = {
-  deleteMenu,
-}

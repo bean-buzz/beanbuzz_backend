@@ -18,7 +18,3 @@ async function deleteUsers() {
 
 deleteUsers();
 
-
-module.exports = {
-  deleteUsers,
-}

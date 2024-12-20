@@ -18,6 +18,3 @@ async function deleteReviews() {
 
 deleteReviews();
 
-module.exports = {
-    deleteReviews,
-}
