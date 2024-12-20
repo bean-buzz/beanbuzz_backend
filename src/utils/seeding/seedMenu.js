@@ -37,3 +37,8 @@ async function seedMenuData() {
 }
 
 seedMenuData();
+
+
+module.exports = {
+  seedMenuData,
+}
