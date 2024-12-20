@@ -1,0 +1,19 @@
+meta {
+  name: Get Order By Customer Name
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/order/user-history/:customerName
+  body: none
+  auth: none
+}
+
+params:path {
+  customerName: jason Parkin
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzY0MTQzOTVkMTE5NmQzZjVjNTNhOGIiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwiZmlyc3ROYW1lIjoiamFzb24iLCJsYXN0TmFtZSI6InBhcmtpbiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM0NjEyMzMyLCJleHAiOjE3MzQ2OTg3MzJ9.kxTMpk7cIBSGpguEq58U6zQGQA1WB07WDQzI66i4Cfk
+}

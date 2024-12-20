@@ -46,7 +46,12 @@ router.post("/register", async (request, response) => {
     });
 
     // Generate a JWT based on the user's ID and email
-    const token = generateJWT(newUser.id, newUser.email, newUser.firstName);
+    const token = generateJWT(
+      newUser.id,
+      newUser.email,
+      newUser.firstName,
+      newUser.lastName
+    );
 
     // Return the JWT and user data
     return response.json({
@@ -55,6 +60,7 @@ router.post("/register", async (request, response) => {
         id: newUser.id,
         email: newUser.email,
         firstName: newUser.firstName,
+        lastName: newUser.lastName,
       },
     });
   } catch (err) {
@@ -106,7 +112,13 @@ router.post("/login", async (request, response) => {
     }
 
     // Generate JWT token
-    const token = generateJWT(user.id, user.email, user.firstName, user.role );
+    const token = generateJWT(
+      user.id,
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.role
+    );
 
     // Return JWT and user data
     response.json({
@@ -115,6 +127,7 @@ router.post("/login", async (request, response) => {
       user: {
         id: user.id,
         firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
       },
     });
