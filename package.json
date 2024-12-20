@@ -7,6 +7,12 @@
     "start": "node src/index.js",
     "seed-menu": "node src/utils/seeding/seedMenu.js",
     "delete-menu": "node src/utils/seeding/deleteMenu.js",
+    "seed-users": "node src/utils/seeding/seedUsers.js",
+    "delete-users": "node src/utils/seeding/deleteUsers.js",
+    "seed-reviews": "node src/utils/seeding/seedReviews.js",
+    "delete-reviews": "node src/utils/seeding/deleteReviews.js",
+    "seed-all": "node src/utils/seeding/seedAll.js",
+    "delete-all": "node src/utils/seeding/deleteAll.js",
     "test": "jest"
   },
   "keywords": [],
