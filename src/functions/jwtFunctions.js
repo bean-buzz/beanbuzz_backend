@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 // Generate a JWT for the user
-function generateJWT(userId, email, firstName, role = "user") {
+function generateJWT(userId, email, firstName, lastName, role = "user") {
   return jwt.sign(
     {
       userId: userId,
       email: email,
       firstName: firstName,
+      lastName: lastName,
       role: role,
     },
     jwtSecretKey,

@@ -163,6 +163,56 @@ router.get(
   }
 );
 
+// GET route to fetch orders for a specific customer
+// GET route to fetch orders for a specific customer
+// GET route to fetch orders for a specific customer
+// GET route to fetch orders for a specific customer by route parameter
+router.get(
+  "/user-history/:customerName",
+  validateUserAuth,
+  async (req, res) => {
+    try {
+      const { customerName } = req.params;
+
+      if (!customerName) {
+        return res.status(400).json({ message: "Customer name is required." });
+      }
+
+      // Ensure the user is accessing their own history
+      const fullName = `${req.authUserData.firstName.toLocaleLowerCase()} ${req.authUserData.lastName.toLocaleLowerCase()}`;
+      const lowercaseCustomerName = customerName.trim().toLocaleLowerCase();
+
+      if (fullName !== lowercaseCustomerName) {
+        return res.status(403).json({
+          message: "Access denied. You can only view your own history.",
+        });
+      }
+
+      console.log(`COMPARE: ${fullName === lowercaseCustomerName}`);
+
+      console.log(`COMPARE: ${fullName} | ${lowercaseCustomerName}`);
+
+      const customerOrders = await Order.find({
+        customerName: { $regex: new RegExp(`^${lowercaseCustomerName}$`, "i") },
+      }).populate({
+        path: "items.menuItem",
+        model: "MenuItem",
+      });
+
+      if (!customerOrders.length) {
+        return res
+          .status(404)
+          .json({ message: "No orders found for this customer." });
+      }
+
+      res.status(200).json(customerOrders);
+    } catch (error) {
+      console.error("Error fetching customer orders:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  }
+);
+
 // PUT - /order/:id
 // Allow staff & admin to update an order by Id
 router.put(
