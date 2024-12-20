@@ -17,7 +17,7 @@ const OrderItemSchema = new mongoose.Schema({
 const OrderSchema = new mongoose.Schema(
   {
     tableNumber: { type: String, required: false },
-    customerName: { type: String, required: true },
+    customerName: { type: String, required: false },
     // Array of ordered items
     items: [OrderItemSchema],
     // Sum of item quantities

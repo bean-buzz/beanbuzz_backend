@@ -31,10 +31,10 @@ router.post("/", async (req, res) => {
       paymentMethod = "Cash",
     } = req.body;
 
-    if (!customerName || !items || items.length === 0) {
+    if (!items || items.length === 0) {
       return res
         .status(400)
-        .json({ message: "Customer name and items are required." });
+        .json({ message: "items are required." });
     }
 
     // Calculate the total price, quantity and validate items
