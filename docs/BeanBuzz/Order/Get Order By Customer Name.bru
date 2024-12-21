@@ -5,15 +5,15 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/order/user-history/:customerName
+  url: http://localhost:8080/order/user-history/:customerEmail
   body: none
   auth: none
 }
 
 params:path {
-  customerName: jason Parkin
+  customerEmail: jason@example.com
 }
 
 headers {
-  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzY0MTQzOTVkMTE5NmQzZjVjNTNhOGIiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwiZmlyc3ROYW1lIjoiamFzb24iLCJsYXN0TmFtZSI6InBhcmtpbiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM0NjEyMzMyLCJleHAiOjE3MzQ2OTg3MzJ9.kxTMpk7cIBSGpguEq58U6zQGQA1WB07WDQzI66i4Cfk
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzY0MWM2ZGM0MTQ0NjEzZDA0NGMzODUiLCJlbWFpbCI6Imphc29uQGV4YW1wbGUuY29tIiwiZmlyc3ROYW1lIjoiamFzb24iLCJsYXN0TmFtZSI6InBhcmtpbiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM0NzU1NzE2LCJleHAiOjE3MzQ4NDIxMTZ9.ox_I0TZtlQaWfohWaJK-s9H0el0yetSFKEQYz4AfsP8
 }
