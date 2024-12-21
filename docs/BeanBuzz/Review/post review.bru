@@ -1,0 +1,20 @@
+meta {
+  name: post review
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/reviews
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userName": "Moli",
+    "rating": 3,
+    "reviewMessage": "bad",
+    "reviewStatus": "declined"
+  }
+}
