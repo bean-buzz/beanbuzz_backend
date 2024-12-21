@@ -119,6 +119,34 @@ router.put(
   }
 );
 
+// PATCH - /menu/item/:itemId/toggle-availability
+router.patch(
+  "/item/:itemId/toggle-availability",
+  validateUserAuth,
+  roleValidator("staff"),
+  async (request, response) => {
+    try {
+      const { itemId } = request.params;
+
+      // Find the menu item
+      const menuItem = await MenuItem.findById(itemId);
+      if (!menuItem) {
+        return response.status(404).json({ message: "Menu item not found." });
+      }
+
+      // Toggle availability
+      menuItem.isAvailable = !menuItem.isAvailable;
+
+      // Save the updated item
+      await menuItem.save();
+
+      response.status(200).json(menuItem);
+    } catch (error) {
+      response.status(500).json({ error: error.message });
+    }
+  }
+);
+
 // DELETE - /menu/item/:itemId
 // Delete a specific menu item (Admin only)
 router.delete(
