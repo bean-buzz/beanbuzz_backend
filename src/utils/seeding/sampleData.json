@@ -519,9 +519,9 @@
         "isVegan": false,
         "isVegetarian": false,
         "isGlutenFree": false,
-        "isDairyFree": true,
-        "isHalal": true,
-        "isKosher": true,
+        "isDairyFree": false,
+        "isHalal": false,
+        "isKosher": false,
         "isBeefFree": true
       },
       "creationDate": "2021-02-15T14:10:30.000Z",
@@ -550,7 +550,7 @@
         "isVegan": false,
         "isVegetarian": false,
         "isGlutenFree": false,
-        "isDairyFree": true,
+        "isDairyFree": false,
         "isHalal": true,
         "isKosher": true,
         "isBeefFree": true
