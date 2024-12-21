@@ -26,15 +26,14 @@ router.post("/", async (req, res) => {
     const {
       tableNumber,
       customerName,
+      customerEmail,
       items,
       specialInstructions,
       paymentMethod = "Cash",
     } = req.body;
 
     if (!items || items.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "items are required." });
+      return res.status(400).json({ message: "items are required." });
     }
 
     // Calculate the total price, quantity and validate items
@@ -80,6 +79,7 @@ router.post("/", async (req, res) => {
     const order = new Order({
       tableNumber,
       customerName,
+      customerEmail,
       items,
       totalQuantity,
       totalPrice,
@@ -108,6 +108,7 @@ router.get("/", validateUserAuth, roleValidator("staff"), async (req, res) => {
       paymentStatus,
       paymentMethod,
       customerName,
+      customerEmail,
       tableNumber,
     } = req.query;
 
@@ -131,6 +132,10 @@ router.get("/", validateUserAuth, roleValidator("staff"), async (req, res) => {
 
     if (tableNumber) {
       filter.tableNumber = tableNumber;
+    }
+
+    if (customerEmail) {
+      filter.customerEmail = customerEmail;
     }
 
     const orders = await Order.find(filter);
@@ -164,36 +169,30 @@ router.get(
 );
 
 // GET route to fetch orders for a specific customer
-// GET route to fetch orders for a specific customer
-// GET route to fetch orders for a specific customer
-// GET route to fetch orders for a specific customer by route parameter
 router.get(
-  "/user-history/:customerName",
+  "/user-history/:customerEmail",
   validateUserAuth,
   async (req, res) => {
     try {
-      const { customerName } = req.params;
+      const { customerEmail } = req.params;
 
-      if (!customerName) {
-        return res.status(400).json({ message: "Customer name is required." });
+      if (!customerEmail) {
+        return res.status(400).json({ message: "Customer email is required." });
       }
 
       // Ensure the user is accessing their own history
-      const fullName = `${req.authUserData.firstName.toLocaleLowerCase()} ${req.authUserData.lastName.toLocaleLowerCase()}`;
-      const lowercaseCustomerName = customerName.trim().toLocaleLowerCase();
+      const authUserEmail = req.authUserData.email.toLocaleLowerCase();
+      const lowercaseCustomerEmail = customerEmail.trim().toLocaleLowerCase();
 
-      if (fullName !== lowercaseCustomerName) {
+      if (authUserEmail !== lowercaseCustomerEmail) {
         return res.status(403).json({
           message: "Access denied. You can only view your own history.",
         });
       }
-
-      console.log(`COMPARE: ${fullName === lowercaseCustomerName}`);
-
-      console.log(`COMPARE: ${fullName} | ${lowercaseCustomerName}`);
-
       const customerOrders = await Order.find({
-        customerName: { $regex: new RegExp(`^${lowercaseCustomerName}$`, "i") },
+        customerEmail: {
+          $regex: new RegExp(`^${lowercaseCustomerEmail}$`, "i"),
+        },
       }).populate({
         path: "items.menuItem",
         model: "MenuItem",
